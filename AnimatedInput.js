@@ -1,5 +1,5 @@
-import React, { Component, createRef  } from 'react';
-import { Animated, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native';
+import React, { Component, createRef } from 'react';
+import { Animated, StyleSheet, TextInput, TouchableWithoutFeedback, View } from 'react-native';
 
 export default class Akira extends Component {
   static defaultProps = {
@@ -26,6 +26,7 @@ export default class Akira extends Component {
       value,
       focusedAnim: new Animated.Value(value ? 1 : 0),
       width: null,
+      label: props.label,
     };
   }
 
@@ -86,7 +87,12 @@ export default class Akira extends Component {
   }
 
   _toggle(isActive) {
-    const { animationDuration, easing, useNativeDriver } = this.props;
+    const { animationDuration, easing, useNativeDriver, label } = this.props;
+    // if (isActive) {
+    //   this.setState({label: label.trim().toUpperCase()})
+    // } else {
+    //   this.setState({label})
+    // }
     this.isActive = isActive;
     Animated.timing(this.state.focusedAnim, {
       toValue: isActive ? 1 : 0,
@@ -122,7 +128,6 @@ export default class Akira extends Component {
 
   render() {
     const {
-      label,
       style: containerStyle,
       height: inputHeight,
       labelHeight,
@@ -135,6 +140,7 @@ export default class Akira extends Component {
       width,
       focusedAnim,
       value,
+      label,
     } = this.state;
 
     return (
@@ -143,20 +149,31 @@ export default class Akira extends Component {
           <Animated.View
             style={{
               width,
+              zIndex: 100,
               height: labelHeight,
               transform: [
                 {
                   translateY: focusedAnim.interpolate({
                     inputRange: [0, 1],
-                    outputRange: [labelHeight + inputPadding, 1],
+                    outputRange: [labelHeight + inputPadding - 5, 1],
                   }),
                 },
               ],
             }}
           >
-            <Text style={[styles.label, labelStyle]}>
+            <Animated.Text style={[
+              {
+                fontSize: focusedAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [18, 14],
+                }),
+              },
+              styles.label,
+              labelStyle,
+            ]}
+            >
               {label}
-            </Text>
+            </Animated.Text>
           </Animated.View>
         </TouchableWithoutFeedback>
         <TextInput
@@ -169,6 +186,7 @@ export default class Akira extends Component {
               width,
               height: inputHeight,
               paddingHorizontal: inputPadding,
+              zIndex: 200,
             },
           ]}
           value={value}
@@ -177,59 +195,15 @@ export default class Akira extends Component {
           onFocus={this._onFocus}
           underlineColorAndroid={'transparent'}
         />
-        {/* left border */}
-        <Animated.View
+        <View
           style={{
             position: 'absolute',
-            left: 0,
-            bottom: 0,
-            height: inputHeight,
-            width: focusedAnim.interpolate({
-              inputRange: [0, 1],
-              outputRange: [6, 1],
-            }),
-            backgroundColor: borderColor,
-          }}
-        />
-        {/* top border */}
-        <Animated.View
-          style={{
-            position: 'absolute',
-            zIndex: -1,
-            top: labelHeight - 12,
+            borderWidth: 5,
+            top: labelHeight / 2,
+            zIndex: 0,
             width,
-            height: focusedAnim.interpolate({
-              inputRange: [0, 1],
-              outputRange: [6, 1],
-            }),
-            backgroundColor: borderColor,
-          }}
-        />
-        {/* right border */}
-        <Animated.View
-          style={{
-            position: 'absolute',
-            right: 0,
-            bottom: 0,
-            height: inputHeight,
-            width: focusedAnim.interpolate({
-              inputRange: [0, 1],
-              outputRange: [6, 1],
-            }),
-            backgroundColor: borderColor,
-          }}
-        />
-        {/* bottom border */}
-        <Animated.View
-          style={{
-            position: 'absolute',
-            bottom: 0,
-            height: focusedAnim.interpolate({
-              inputRange: [0, 1],
-              outputRange: [6, 1],
-            }),
-            width,
-            backgroundColor: borderColor,
+            borderRadius: 15,
+            height: inputHeight + labelHeight / 2,
           }}
         />
       </View>
@@ -240,12 +214,14 @@ export default class Akira extends Component {
 const styles = StyleSheet.create({
   label: {
     backgroundColor: 'white',
-    zIndex: 999,
-    fontSize: 14,
+    zIndex: 300,
     fontWeight: 'bold',
     color: '#cc6055',
+    paddingHorizontal: 10,
+    marginLeft: 15,
     textAlign: 'center',
-    width: 100,
+    alignSelf: 'flex-start',
+    borderRadius: 6,
   },
   textInput: {
     padding: 0,
