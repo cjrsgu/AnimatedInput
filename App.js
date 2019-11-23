@@ -14,8 +14,12 @@ const App = () => {
           style={styles.scrollView}>
           <View style={styles.body}>
             <AnimatedInput label={'First Name'}
-                           borderColor={'#a5d1cc'}
-                           labelStyle={{ color: '#ac83c4' }}
+              borderColor={'#a5d1cc'}
+              labelStyle={{ color: '#ac83c4' }}
+            />
+            <AnimatedInput label={'Second Name'}
+              borderColor={'#a5d1cc'}
+              labelStyle={{ color: '#ac83c4' }}
             />
           </View>
         </ScrollView>

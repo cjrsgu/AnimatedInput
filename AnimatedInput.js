@@ -27,6 +27,7 @@ export default class Akira extends Component {
       focusedAnim: new Animated.Value(value ? 1 : 0),
       width: null,
       label: props.label,
+      isActive: false,
     };
   }
 
@@ -93,6 +94,7 @@ export default class Akira extends Component {
     // } else {
     //   this.setState({label})
     // }
+    this.setState({isActive})
     this.isActive = isActive;
     Animated.timing(this.state.focusedAnim, {
       toValue: isActive ? 1 : 0,
@@ -141,6 +143,7 @@ export default class Akira extends Component {
       focusedAnim,
       value,
       label,
+      isActive,
     } = this.state;
 
     return (
@@ -167,6 +170,7 @@ export default class Akira extends Component {
                   inputRange: [0, 1],
                   outputRange: [18, 14],
                 }),
+                textTransform: isActive ? 'capitalize' : null,
               },
               styles.label,
               labelStyle,
